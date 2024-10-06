@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-public class Company extends Base {
+public class Company extends BaseDeletedAt {
 
   @NotNull
   private String name;
