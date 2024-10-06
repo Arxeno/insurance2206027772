@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: insurance2206027772
+  datasource:
+    url: jdbc:postgresql://localhost:15001/insurance2206027772
+    username: postgres
+    password: secret99
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: create
