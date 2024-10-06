@@ -4,6 +4,8 @@ import apap.ti.insurance2206027772.enums.PolicyStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -18,7 +20,14 @@ import lombok.Setter;
 @Entity
 public class Policy extends Base {
 
-  // TODO: relationa (check all models relation too)
+  @ManyToOne
+  @JoinColumn(name = "company_id")
+  private Company company;
+
+  @ManyToOne
+  @JoinColumn(name = "patient_id")
+  private Patient patient;
+
   @NotNull
   @Enumerated(EnumType.ORDINAL)
   private PolicyStatus status;

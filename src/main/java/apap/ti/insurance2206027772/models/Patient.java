@@ -1,6 +1,7 @@
 package apap.ti.insurance2206027772.models;
 
 import apap.ti.insurance2206027772.enums.Gender;
+import apap.ti.insurance2206027772.enums.PClass;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -35,5 +36,5 @@ public class Patient extends Base {
   @NotNull
   private String email;
 
-  private Integer pClass;
+  private PClass pClass;
 }
