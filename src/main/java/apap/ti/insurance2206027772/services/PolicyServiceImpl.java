@@ -10,18 +10,18 @@ public class PolicyServiceImpl implements PolicyService {
   @Autowired
   private PolicyDb policyRepository;
 
-  public int getTotalPoliciesCount() {
-    return (int) policyRepository.count();
+  public long getTotalPoliciesCount() {
+    return policyRepository.count();
   }
 
-  public String generatePolicyId(Policy policy) {
+  private String generatePolicyId(Policy policy) {
     String patientInitials = generatePatientInitials(policy);
     String companyPrefix = policy
       .getCompany()
       .getName()
       .substring(0, 3)
       .toUpperCase();
-    int policyCount = getTotalPoliciesCount() + 1;
+    long policyCount = getTotalPoliciesCount() + 1;
 
     return String.format(
       "POL%s%s%04d",
