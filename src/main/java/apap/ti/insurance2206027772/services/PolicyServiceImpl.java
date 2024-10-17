@@ -5,7 +5,9 @@ import apap.ti.insurance2206027772.repositories.PolicyDb;
 import apap.ti.insurance2206027772.services.interfaces.PolicyService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PolicyServiceImpl implements PolicyService {
 
   @Autowired
