@@ -6,8 +6,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,4 +39,7 @@ public class Patient extends Base {
   private String email;
 
   private PClass pClass;
+
+  @OneToMany(mappedBy = "patient")
+  private List<Policy> listPolicy;
 }

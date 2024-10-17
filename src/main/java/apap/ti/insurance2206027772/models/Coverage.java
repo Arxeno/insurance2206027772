@@ -1,6 +1,9 @@
 package apap.ti.insurance2206027772.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -14,7 +17,11 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-public class Coverage extends Base {
+public class Coverage extends BaseCreatedUpdated {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   @NotNull
   private String name;
@@ -22,6 +29,6 @@ public class Coverage extends Base {
   @NotNull
   private Long coverageAmount;
 
-  @ManyToMany(mappedBy = "coverages")
-  private List<Company> companies;
+  @ManyToMany(mappedBy = "listCoverage")
+  private List<Company> listCompany;
 }

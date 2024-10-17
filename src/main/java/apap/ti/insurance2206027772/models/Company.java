@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -36,5 +37,8 @@ public class Company extends BaseDeletedAt {
     joinColumns = @JoinColumn(name = "company_id"),
     inverseJoinColumns = @JoinColumn(name = "coverage_id")
   )
-  private List<Coverage> coverages;
+  private List<Coverage> listCoverage;
+
+  @OneToMany(mappedBy = "company")
+  private List<Policy> listPolicy;
 }
