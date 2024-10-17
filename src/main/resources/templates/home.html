@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Home | ApapMedika</title>
+
+	<object th:replace="~{fragments/common :: css}"></object>
+	<object th:replace="~{fragments/common :: js}"></object>
+</head>
+
+<body>
+	<object th:replace="~{fragments/navbar :: navbar}"></object>
+
+	<h1 class="text-center">Insurance System</h1>
+
+	<div class="row d-flex justify-content-center">
+		<div class="col-auto">
+			<div class="card text-white bg-info mb-3" style="max-width: 18rem;">
+				<div class="card-header text-center">Policy</div>
+				<div class="card-body">
+					<h1 class="card-title text-center" th:text="${countPolicy}">0</h1>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-auto">
+			<div class="card text-white bg-info mb-3" style="max-width: 18rem;">
+				<div class="card-header text-center">Company</div>
+				<div class="card-body">
+					<h1 class="card-title text-center" th:text="${countCompany}">0</h1>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-auto">
+			<div class="card text-white bg-info mb-3" style="max-width: 18rem;">
+				<div class="card-header text-center">Patient</div>
+				<div class="card-body">
+					<h1 class="card-title text-center" th:text="${countPatient}">0</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
