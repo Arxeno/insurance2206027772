@@ -17,7 +17,4 @@ public class BaseCreatedUpdated {
 
   @UpdateTimestamp
   private Date updatedAt;
-
-  private String createdBy;
-  private String updatedBy;
 }
