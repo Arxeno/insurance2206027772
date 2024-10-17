@@ -11,6 +11,6 @@ public class CompanyServiceImpl implements CompanyService {
 
   @Override
   public long getTotalCompaniesCount() {
-    return companyDb.count();
+    return companyDb.countByDeletedAtNull();
   }
 }
