@@ -3,15 +3,40 @@ package apap.ti.insurance2206027772.services;
 import apap.ti.insurance2206027772.models.Policy;
 import apap.ti.insurance2206027772.repositories.PolicyDb;
 import apap.ti.insurance2206027772.services.interfaces.PolicyService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class PolicyServiceImpl implements PolicyService {
 
   @Autowired
-  private PolicyDb policyRepository;
+  private PolicyDb policyDb;
 
   public long getTotalPoliciesCount() {
-    return policyRepository.count();
+    return policyDb.count();
+  }
+
+  @Override
+  public List<Policy> getAllPolicies() {
+    return policyDb.findAll();
+  }
+
+  @Override
+  public Policy getPolicyById(String id) {
+    return policyDb.findById(id).orElse(null);
+  }
+
+  @Override
+  public Policy createPolicy(Policy policy) {
+    if (policy.getId() == null) {
+      String policyId = generatePolicyId(policy);
+      policy.setId(policyId);
+    }
+    return policyDb.save(policy);
+  }
+
+  @Override
+  public void deletePolicyById(String id) {
+    policyDb.deleteById(id);
   }
 
   private String generatePolicyId(Policy policy) {
@@ -37,14 +62,5 @@ public class PolicyServiceImpl implements PolicyService {
     String lastName = nameParts.length > 1 ? nameParts[1] : firstName;
 
     return (firstName.substring(0, 1) + lastName.substring(0, 1)).toUpperCase();
-  }
-
-  @Override
-  public Policy savePolicy(Policy policy) {
-    if (policy.getId() == null) {
-      String policyId = generatePolicyId(policy);
-      policy.setId(policyId);
-    }
-    return policyRepository.save(policy);
   }
 }
