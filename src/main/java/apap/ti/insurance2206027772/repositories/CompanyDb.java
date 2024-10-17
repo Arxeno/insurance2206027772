@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface CompanyDb extends JpaRepository<Company, UUID> {
   long countByDeletedAtNull();
   List<Company> findByDeletedAtNull();
+  Company findByDeletedAtNullAndId(UUID id);
 }
