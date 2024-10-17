@@ -21,7 +21,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-public class Policy extends Base {
+public class Policy extends BaseCreatedUpdated {
 
   @Id
   @Column(unique = true, length = 12)
