@@ -1,5 +1,6 @@
 package apap.ti.insurance2206027772.services;
 
+import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
 import apap.ti.insurance2206027772.repositories.CompanyDb;
 import apap.ti.insurance2206027772.services.interfaces.CompanyService;
@@ -37,11 +38,16 @@ public class CompanyServiceImpl implements CompanyService {
   }
 
   @Override
-  public void deleteCompanyById(UUID id) throws NoResourceFoundException {
+  public void deleteCompanyById(UUID id) throws NotFound {
     Company company = companyDb.findById(id).orElse(null);
 
     if (company == null) {
-      throw new NoResourceFoundException(null, null);
+      throw new NotFound(
+        String.format(
+          "Company dengan ID %s tidak dapat ditemukan.",
+          id.toString()
+        )
+      );
     }
 
     company.setDeletedAt(new Date());

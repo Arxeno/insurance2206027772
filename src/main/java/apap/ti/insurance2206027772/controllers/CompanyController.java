@@ -80,8 +80,14 @@ public class CompanyController {
   }
 
   @PostMapping("/{id}/delete")
-  public String postDeleteCompany(@PathVariable("id") UUID id) {
-    //TODO: process POST request
+  public String postDeleteCompany(@PathVariable("id") UUID id, Model model)
+    throws NotFound {
+    companyService.deleteCompanyById(id);
+
+    model.addAttribute(
+      "message",
+      String.format("Company dengan ID %s berhasil dihapus.", id.toString())
+    );
 
     return "response";
   }

@@ -36,9 +36,11 @@
 					</div>
 				</div>
 
-				<div class="mb-3">
+				<div class="mb-3 d-flex gap-2">
 					<a th:href="@{/company/{id}/update(id=${company.id})}" class="btn btn-success">Update</a>
-					<a th:href="@{/company/{id}/delete(id=${company.id})}" class="btn btn-danger">Delete</a>
+					<form th:action="@{/company/{id}/delete(id=${company.id})}" method="post">
+						<button type="submit" class="btn btn-danger">Delete</button>
+					</form>
 				</div>
 
 				<h5>Coverages</h5>
