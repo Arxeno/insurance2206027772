@@ -54,7 +54,7 @@ public class Policy extends BaseCreatedUpdated {
     return String.format("IDR %s.00", formatted);
   }
 
-  public String getTotalCovered() {
+  public String getTotalCoveredString() {
     String formatted = String.format("%,d", totalCovered);
 
     return String.format("IDR %s.00", formatted);

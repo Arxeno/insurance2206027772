@@ -1,6 +1,7 @@
 package apap.ti.insurance2206027772.controllers;
 
 import apap.ti.insurance2206027772.enums.PolicyStatus;
+import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Policy;
 import apap.ti.insurance2206027772.services.interfaces.PolicyService;
 import java.util.List;
@@ -41,8 +42,20 @@ public class PolicyController {
   }
 
   @GetMapping("/{id}")
-  public String getDetailPolicyPage(@PathVariable("id") String id) {
-    // TODO
+  public String getDetailPolicyPage(@PathVariable("id") String id, Model model)
+    throws NotFound {
+    Policy policy = policyService.getPolicyById(id);
+
+    if (policy == null) {
+      throw new NotFound(
+        String.format(
+          "Policy dengan ID %s tidak dapat ditemukan.",
+          id.toString()
+        )
+      );
+    }
+
+    model.addAttribute("policy", policy);
 
     return "policy-details";
   }
@@ -101,5 +114,17 @@ public class PolicyController {
     //TODO: process POST request
 
     return "response";
+  }
+
+  @GetMapping("/{id}/delete")
+  public String cancelPolicy(@PathVariable("id") String id, Model model)
+    throws NotFound {
+    policyService.deletePolicyById(id);
+    Policy policy = policyService.getPolicyById(id);
+
+    model.addAttribute("message", "Berhasil membatalkan policy!");
+    model.addAttribute("policy", policy);
+
+    return "policy-details";
   }
 }

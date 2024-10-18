@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Policy Detail | ApapMedika</title>
+
+	<object th:replace="~{fragments/common :: css}"></object>
+	<object th:replace="~{fragments/common :: js}"></object>
+
+	<style>
+		.badge-status {
+			font-size: 16px;
+			font-weight: bold;
+			padding: 5px 10px;
+		}
+
+		.badge-created {
+			background-color: #0275d8;
+		}
+
+		.badge-partially-claimed {
+			background-color: #f0ad4e;
+		}
+
+		.badge-fully-claimed {
+			background-color: #5cb85c;
+		}
+
+		.badge-expired {
+			background-color: #d9534f;
+		}
+
+		.badge-cancelled {
+			background-color: #d0110a;
+		}
+	</style>
+</head>
+
+<body>
+	<object th:replace="~{fragments/navbar :: navbar}"></object>
+
+	<div class="container my-5">
+		<div class="alert alert-success" th:if="${message != null}">
+			<strong>Success! </strong>
+			<p th:text="${message}"></p>
+		</div>
+
+		<div class="card">
+			<div class="card-header">
+				<h3>Policy Detail</h3>
+			</div>
+			<div class="card-body">
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<p><strong>Policy ID:</strong> <span th:text="${policy.id}"></span></p>
+						<p><strong>Patient:</strong> <span th:text="${policy.patient.name}"></span></p>
+						<p><strong>Company:</strong> <span th:text="${policy.company.name}"></span></p>
+						<p><strong>Expiry Date:</strong> <span th:text="${#dates.format(policy.expiryDate, 'dd MMMM yyyy')}"></span>
+						</p>
+						<p><strong>Total Coverage:</strong> <span th:text="${policy.totalCoverageString}"></span></p>
+						<p><strong>Total Covered:</strong> <span th:text="${policy.totalCoveredString}"></span></p>
+					</div>
+					<div class="col-md-6">
+						<p><strong>Created At:</strong> <span
+								th:text="${#dates.format(policy.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+						<p><strong>Last Updated At:</strong> <span
+								th:text="${#dates.format(policy.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+						<p><strong>Status:</strong>
+							<span th:class="'badge badge-status badge-' + ${policy.status.name().toLowerCase()}"
+								th:text="${policy.status}"></span>
+						</p>
+					</div>
+				</div>
+
+				<div class="mb-3">
+					<a th:href="@{/policy/{id}/update(id=${policy.id})}" class="btn btn-success">Update</a>
+					<a th:href="@{/policy/{id}/delete(id=${policy.id})}" class="btn btn-danger">Cancel</a>
+				</div>
+
+				<h5>Coverages</h5>
+				<table id="coverageTable" class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th>No</th>
+							<th>Coverage</th>
+							<th>Coverage Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="coverage, iterStat : ${policy.company.listCoverage}">
+							<td th:text="${iterStat.index + 1}"></td>
+							<td th:text="${coverage.name}"></td>
+							<td th:text="${coverage.coverageAmountString}"></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$(document).ready(function () {
+			$('#coverageTable').DataTable({
+				"paging": true,
+				"searching": true,
+				"ordering": true,
+				"info": true
+			});
+		});
+	</script>
+</body>
+
+</html>

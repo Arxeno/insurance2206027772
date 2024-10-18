@@ -1,6 +1,7 @@
 package apap.ti.insurance2206027772.services;
 
 import apap.ti.insurance2206027772.enums.PolicyStatus;
+import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Policy;
 import apap.ti.insurance2206027772.repositories.PolicyDb;
 import apap.ti.insurance2206027772.services.interfaces.PolicyService;
@@ -73,8 +74,22 @@ public class PolicyServiceImpl implements PolicyService {
   }
 
   @Override
-  public void deletePolicyById(String id) {
-    policyDb.deleteById(id);
+  public void deletePolicyById(String id) throws NotFound {
+    Policy policy = getPolicyById(id);
+
+    if (policy == null) {
+      throw new NotFound(
+        String.format(
+          "Policy dengan ID %s tidak dapat ditemukan.",
+          policy.getId()
+        )
+      );
+    }
+
+    // TODO: calculate available limit etc. see docs for details
+    policy.setStatus(PolicyStatus.CANCELLED);
+
+    policyDb.save(policy);
   }
 
   private String generatePolicyId(Policy policy) {
