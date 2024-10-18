@@ -1,6 +1,7 @@
 package apap.ti.insurance2206027772.controllers;
 
 import apap.ti.insurance2206027772.dtos.request.AddCompanyRequestDTO;
+import apap.ti.insurance2206027772.dtos.request.UpdateCompanyRequestDTO;
 import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
 import apap.ti.insurance2206027772.models.Coverage;
@@ -170,15 +171,122 @@ public class CompanyController {
   }
 
   @GetMapping("/{id}/update")
-  public String getUpdateCompanyForm(@PathVariable("id") UUID id) {
-    // TODO: dto and model
+  public String getUpdateCompanyForm(@PathVariable("id") UUID id, Model model)
+    throws NotFound {
+    Company company = companyService.getCompanyById(id);
+
+    if (company == null) {
+      throw new NotFound(
+        String.format(
+          "Company dengan ID %s tidak dapat ditemukan.",
+          id.toString()
+        )
+      );
+    }
+
+    List<Coverage> coverages = coverageService.getAllCoverages();
+    UpdateCompanyRequestDTO dto = new UpdateCompanyRequestDTO();
+    dto.setId(company.getId());
+    dto.setName(company.getName());
+    dto.setContact(company.getContact());
+    dto.setEmail(company.getEmail());
+    dto.setAddress(company.getAddress());
+    dto.setListCoverage(company.getListCoverage());
+    String totalCoverage = dto.getTotalCoverageString(coverages);
+
+    model.addAttribute("dto", dto);
+    model.addAttribute("totalCoverage", totalCoverage);
+    model.addAttribute("coverages", coverages);
+
+    return "update-company-form";
+  }
+
+  @PostMapping(value = "/update", params = { "addCoverage" })
+  public String addCoverageRow(
+    @Valid @ModelAttribute UpdateCompanyRequestDTO dto,
+    Model model
+  ) {
+    if (dto.getListCoverage() == null || dto.getListCoverage().isEmpty()) {
+      dto.setListCoverage(new ArrayList<>());
+    }
+
+    if (coverageService.getAllCoverages().size() > 0) {
+      dto.getListCoverage().add(new Coverage());
+    }
+
+    List<Coverage> coverages = coverageService.getAllCoverages();
+    String totalCoverage = dto.getTotalCoverageString(coverages);
+
+    model.addAttribute("dto", dto);
+    model.addAttribute("totalCoverage", totalCoverage);
+    model.addAttribute("coverages", coverages);
+
+    return "update-company-form";
+  }
+
+  @PostMapping(value = "/update", params = { "removeCoverage" })
+  public String removeCoverageRow(
+    @Valid @ModelAttribute UpdateCompanyRequestDTO dto,
+    @RequestParam("removeCoverage") int row,
+    Model model
+  ) {
+    dto.getListCoverage().remove(row);
+
+    List<Coverage> coverages = coverageService.getAllCoverages();
+    String totalCoverage = dto.getTotalCoverageString(coverages);
+
+    model.addAttribute("dto", dto);
+    model.addAttribute("totalCoverage", totalCoverage);
+    model.addAttribute("coverages", coverages);
+
+    return "update-company-form";
+  }
+
+  @PostMapping(value = "/update", params = { "refreshTotalCoverage" })
+  public String refreshTotalCoverage(
+    @Valid @ModelAttribute UpdateCompanyRequestDTO dto,
+    Model model
+  ) {
+    List<Coverage> coverages = coverageService.getAllCoverages();
+    String totalCoverage = dto.getTotalCoverageString(coverages);
+
+    model.addAttribute("dto", dto);
+    model.addAttribute("totalCoverage", totalCoverage);
+    model.addAttribute("coverages", coverages);
 
     return "update-company-form";
   }
 
   @PostMapping("/update")
-  public String postUpdateCompany() {
-    //TODO: process POST request
+  public String postUpdateCompany(
+    @Valid @ModelAttribute UpdateCompanyRequestDTO dto,
+    BindingResult bindingResult,
+    Model model
+  ) throws NotFound {
+    if (bindingResult.hasErrors()) {
+      List<String> errors = bindingResult
+        .getFieldErrors()
+        .stream()
+        .map(error -> error.getField() + " " + error.getDefaultMessage())
+        .toList();
+
+      List<Coverage> coverages = coverageService.getAllCoverages();
+      String totalCoverage = dto.getTotalCoverageString(coverages);
+
+      model.addAttribute("errors", errors);
+      model.addAttribute("dto", dto);
+      model.addAttribute("totalCoverage", totalCoverage);
+      model.addAttribute("coverages", coverages);
+
+      return "create-company-form";
+    }
+
+    companyService.updateCompany(dto);
+
+    model.addAttribute(
+      "message",
+      String.format("Company dengan ID %s berhasil di-update!", dto.getId())
+    );
 
     return "response";
   }

@@ -1,5 +1,6 @@
 package apap.ti.insurance2206027772.services;
 
+import apap.ti.insurance2206027772.dtos.request.UpdateCompanyRequestDTO;
 import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
 import apap.ti.insurance2206027772.repositories.CompanyDb;
@@ -53,5 +54,29 @@ public class CompanyServiceImpl implements CompanyService {
     company.setDeletedAt(new Date());
 
     companyDb.save(company);
+  }
+
+  @Override
+  public Company updateCompany(UpdateCompanyRequestDTO dto) throws NotFound {
+    Company company = getCompanyById(dto.getId());
+
+    if (company == null) {
+      throw new NotFound(
+        String.format(
+          "Company dengan ID %s tidak dapat ditemukan.",
+          dto.getId().toString()
+        )
+      );
+    }
+
+    company.setName(dto.getName());
+    company.setContact(dto.getContact());
+    company.setEmail(dto.getEmail());
+    company.setAddress(dto.getAddress());
+    company.setListCoverage(dto.getListCoverage());
+
+    company = companyDb.save(company);
+
+    return company;
   }
 }
