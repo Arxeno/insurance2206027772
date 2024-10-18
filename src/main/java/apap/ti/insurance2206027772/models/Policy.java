@@ -47,4 +47,16 @@ public class Policy extends BaseCreatedUpdated {
 
   @NotNull
   private Long totalCovered;
+
+  public String getTotalCoverageString() {
+    String formatted = String.format("%,d", totalCoverage);
+
+    return String.format("IDR %s.00", formatted);
+  }
+
+  public String getTotalCovered() {
+    String formatted = String.format("%,d", totalCovered);
+
+    return String.format("IDR %s.00", formatted);
+  }
 }

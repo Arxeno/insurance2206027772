@@ -1,5 +1,6 @@
 package apap.ti.insurance2206027772.services;
 
+import apap.ti.insurance2206027772.enums.PolicyStatus;
 import apap.ti.insurance2206027772.models.Policy;
 import apap.ti.insurance2206027772.repositories.PolicyDb;
 import apap.ti.insurance2206027772.services.interfaces.PolicyService;
@@ -20,6 +21,41 @@ public class PolicyServiceImpl implements PolicyService {
   @Override
   public List<Policy> getAllPolicies() {
     return policyDb.findAll();
+  }
+
+  @Override
+  public List<Policy> getAllPolicies(
+    PolicyStatus status,
+    Long minCoverage,
+    Long maxCoverage
+  ) {
+    List<Policy> policies = getAllPolicies();
+
+    if (status != null) {
+      policies =
+        policies
+          .stream()
+          .filter(policy -> policy.getStatus() == status)
+          .toList();
+    }
+
+    if (minCoverage != null) {
+      policies =
+        policies
+          .stream()
+          .filter(policy -> policy.getTotalCoverage() >= minCoverage)
+          .toList();
+    }
+
+    if (maxCoverage != null) {
+      policies =
+        policies
+          .stream()
+          .filter(policy -> policy.getTotalCoverage() <= maxCoverage)
+          .toList();
+    }
+
+    return policies;
   }
 
   @Override
