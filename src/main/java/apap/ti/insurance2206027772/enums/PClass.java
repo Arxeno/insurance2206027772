@@ -1,9 +1,15 @@
 package apap.ti.insurance2206027772.enums;
 
 public enum PClass {
-  LEVEL_1,
-  LEVEL_2,
-  LEVEL_3;
+  LEVEL_1(1),
+  LEVEL_2(2),
+  LEVEL_3(3);
+
+  private final int value;
+
+  private PClass(int value) {
+    this.value = value;
+  }
 
   public Integer getClassLimit(PClass pClass) {
     switch (pClass) {
