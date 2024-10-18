@@ -31,4 +31,10 @@ public class Coverage extends BaseCreatedUpdated {
 
   @ManyToMany(mappedBy = "listCoverage")
   private List<Company> listCompany;
+
+  public String getCoverageAmountString() {
+    String formatted = String.format("%,d", coverageAmount);
+
+    return String.format("IDR %s.00", formatted);
+  }
 }

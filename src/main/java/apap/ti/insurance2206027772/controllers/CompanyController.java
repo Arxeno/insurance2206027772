@@ -1,5 +1,6 @@
 package apap.ti.insurance2206027772.controllers;
 
+import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
 import apap.ti.insurance2206027772.services.interfaces.CompanyService;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Controller
 @RequestMapping("/company")
@@ -31,8 +33,20 @@ public class CompanyController {
   }
 
   @GetMapping("/{id}")
-  public String getDetailCompanyPage(@PathVariable("id") UUID id) {
-    // TODO
+  public String getDetailCompanyPage(@PathVariable("id") UUID id, Model model)
+    throws NotFound {
+    Company company = companyService.getCompanyById(id);
+
+    if (company == null) {
+      throw new NotFound(
+        String.format(
+          "Company dengan ID %s tidak dapat ditemukan.",
+          id.toString()
+        )
+      );
+    }
+
+    model.addAttribute("company", company);
 
     return "company-details";
   }
