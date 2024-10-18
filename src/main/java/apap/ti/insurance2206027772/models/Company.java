@@ -41,4 +41,20 @@ public class Company extends BaseDeletedAt {
 
   @OneToMany(mappedBy = "company")
   private List<Policy> listPolicy;
+
+  public Long getTotalCoverage() {
+    Long totalCoverage = 0L;
+
+    for (Coverage coverage : listCoverage) {
+      totalCoverage += coverage.getCoverageAmount();
+    }
+
+    return totalCoverage;
+  }
+
+  public String getTotalCoverageString() {
+    String formatted = String.format("%,d", getTotalCoverage());
+
+    return String.format("IDR %s.00", formatted);
+  }
 }

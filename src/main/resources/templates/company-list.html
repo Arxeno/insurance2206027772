@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>List Company | Apap Medika</title>
+
+	<object th:replace="~{fragments/common :: css}"></object>
+	<object th:replace="~{fragments/common :: js}"></object>
+</head>
+
+<body>
+	<object th:replace="~{fragments/navbar :: navbar}"></object>
+
+	<div class="container mt-4">
+
+		<div class="d-flex justify-content-between">
+			<h2>Company List</h2>
+			<div>
+				<a th:href="@{/company/add}" class="btn btn-success">+ Add Company</a>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table id="companyTable" class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th>No</th>
+						<th>Name</th>
+						<th>Policy</th>
+						<th>Coverages</th>
+						<th>Total Coverage</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="company, iterStat : ${companies}">
+						<td th:text="${iterStat.index + 1}">1</td>
+						<td th:text="${company.name}">Company Name</td>
+						<td th:text="${company.listPolicy.size()}">5</td>
+						<td>
+							<span th:each="coverage, iterStat : ${company.listCoverage}"
+								th:text="${coverage.name} + ${iterStat.index < 2 ? ', ' : (iterStat.index == 2 ? ', ...' : '')}"
+								th:if="${iterStat.index < 3}">Coverages</span>
+						</td>
+						<td th:text="${company.totalCoverageString}"></td>
+						<td>
+							<a th:href="@{/company/{id}(id=${company.id})}" class="btn btn-primary">Detail</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<script>
+		$(document).ready(function () {
+			$('#companyTable').DataTable();
+		});
+	</script>
+</body>
+
+</html>
