@@ -1,14 +1,21 @@
 package apap.ti.insurance2206027772.controllers;
 
+import apap.ti.insurance2206027772.dtos.request.AddCompanyRequestDTO;
 import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
+import apap.ti.insurance2206027772.models.Coverage;
 import apap.ti.insurance2206027772.services.interfaces.CompanyService;
+import apap.ti.insurance2206027772.services.interfaces.CoverageService;
+import jakarta.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +29,9 @@ public class CompanyController {
 
   @Autowired
   private CompanyService companyService;
+
+  @Autowired
+  private CoverageService coverageService;
 
   @GetMapping("/all")
   public String getListCompaniesPage(Model model) {
@@ -52,15 +62,109 @@ public class CompanyController {
   }
 
   @GetMapping("/add")
-  public String getCreateCompanyForm() {
-    // TODO
+  public String getCreateCompanyForm(Model model) {
+    var dto = new AddCompanyRequestDTO();
+
+    List<Coverage> coverages = coverageService.getAllCoverages();
+    String totalCoverage = "IDR 0.00";
+
+    model.addAttribute("dto", dto);
+    model.addAttribute("totalCoverage", totalCoverage);
+    model.addAttribute("coverages", coverages);
+
+    return "create-company-form";
+  }
+
+  @PostMapping(value = "/add", params = { "addCoverage" })
+  public String addCoverageRow(
+    @Valid @ModelAttribute AddCompanyRequestDTO dto,
+    Model model
+  ) {
+    if (dto.getListCoverage() == null || dto.getListCoverage().isEmpty()) {
+      dto.setListCoverage(new ArrayList<>());
+    }
+
+    if (coverageService.getAllCoverages().size() > 0) {
+      dto.getListCoverage().add(new Coverage());
+    }
+
+    List<Coverage> coverages = coverageService.getAllCoverages();
+    String totalCoverage = dto.getTotalCoverageString(coverages);
+
+    model.addAttribute("dto", dto);
+    model.addAttribute("totalCoverage", totalCoverage);
+    model.addAttribute("coverages", coverages);
+
+    return "create-company-form";
+  }
+
+  @PostMapping(value = "/add", params = { "removeCoverage" })
+  public String removeCoverageRow(
+    @Valid @ModelAttribute AddCompanyRequestDTO dto,
+    @RequestParam("removeCoverage") int row,
+    Model model
+  ) {
+    dto.getListCoverage().remove(row);
+
+    List<Coverage> coverages = coverageService.getAllCoverages();
+    String totalCoverage = dto.getTotalCoverageString(coverages);
+
+    model.addAttribute("dto", dto);
+    model.addAttribute("totalCoverage", totalCoverage);
+    model.addAttribute("coverages", coverages);
+
+    return "create-company-form";
+  }
+
+  @PostMapping(value = "/add", params = { "refreshTotalCoverage" })
+  public String refreshTotalCoverage(
+    @Valid @ModelAttribute AddCompanyRequestDTO dto,
+    Model model
+  ) {
+    List<Coverage> coverages = coverageService.getAllCoverages();
+    String totalCoverage = dto.getTotalCoverageString(coverages);
+
+    model.addAttribute("dto", dto);
+    model.addAttribute("totalCoverage", totalCoverage);
+    model.addAttribute("coverages", coverages);
 
     return "create-company-form";
   }
 
   @PostMapping("/add")
-  public String postCreateCompany() {
-    //TODO: process POST request
+  public String postCreateCompany(
+    @Valid @ModelAttribute AddCompanyRequestDTO dto,
+    BindingResult bindingResult,
+    Model model
+  ) {
+    if (bindingResult.hasErrors()) {
+      List<String> errors = bindingResult
+        .getFieldErrors()
+        .stream()
+        .map(error -> error.getField() + " " + error.getDefaultMessage())
+        .toList();
+
+      List<Coverage> coverages = coverageService.getAllCoverages();
+      String totalCoverage = dto.getTotalCoverageString(coverages);
+
+      model.addAttribute("errors", errors);
+      model.addAttribute("dto", dto);
+      model.addAttribute("totalCoverage", totalCoverage);
+      model.addAttribute("coverages", coverages);
+
+      return "create-company-form";
+    }
+
+    Company newCompany = new Company();
+    newCompany.setName(dto.getName());
+    newCompany.setContact(dto.getContact());
+    newCompany.setEmail(dto.getEmail());
+    newCompany.setAddress(dto.getAddress());
+    newCompany.setListCoverage(dto.getListCoverage());
+
+    companyService.createCompany(newCompany);
+
+    model.addAttribute("message", "Berhasil membuat company!");
 
     return "response";
   }
