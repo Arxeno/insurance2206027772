@@ -32,17 +32,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/policy")
 public class PolicyController {
 
-  @Autowired
-  private PolicyService policyService;
+  private final PolicyService policyService;
 
-  @Autowired
-  private PatientService patientService;
+  private final PatientService patientService;
 
-  @Autowired
-  private CompanyService companyService;
+  private final CompanyService companyService;
 
-  @Autowired
-  private CoverageService coverageService;
+  private final CoverageService coverageService;
+
+  public PolicyController(
+    PolicyService policyService,
+    PatientService patientService,
+    CompanyService companyService,
+    CoverageService coverageService
+  ) {
+    this.policyService = policyService;
+    this.patientService = patientService;
+    this.companyService = companyService;
+    this.coverageService = coverageService;
+  }
 
   @GetMapping("/all")
   public String getListPoliciesPage(

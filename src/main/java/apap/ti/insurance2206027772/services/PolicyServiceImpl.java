@@ -19,14 +19,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class PolicyServiceImpl implements PolicyService {
 
-  @Autowired
-  private PolicyDb policyDb;
+  private final PolicyDb policyDb;
 
-  @Autowired
-  private CompanyService companyService;
+  private final CompanyService companyService;
 
-  @Autowired
-  private PatientService patientService;
+  private final PatientService patientService;
+
+  public PolicyServiceImpl(
+    PolicyDb policyDb,
+    CompanyService companyService,
+    PatientService patientService
+  ) {
+    this.policyDb = policyDb;
+    this.companyService = companyService;
+    this.patientService = patientService;
+  }
 
   public long getTotalPoliciesCount() {
     return policyDb.count();
