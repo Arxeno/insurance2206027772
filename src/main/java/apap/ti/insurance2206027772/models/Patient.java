@@ -2,6 +2,7 @@ package apap.ti.insurance2206027772.models;
 
 import apap.ti.insurance2206027772.enums.Gender;
 import apap.ti.insurance2206027772.enums.PClass;
+import apap.ti.insurance2206027772.enums.PolicyStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -79,7 +80,9 @@ public class Patient extends Base {
     }
 
     for (Policy policy : listPolicy) {
-      availableLimit -= policy.getTotalCoverage();
+      if (policy.getStatus() != PolicyStatus.CANCELLED) {
+        availableLimit -= policy.getTotalCoverage();
+      }
     }
 
     return availableLimit;
