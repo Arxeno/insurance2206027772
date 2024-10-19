@@ -5,4 +5,4 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/policy")
-public class PolicyController {}
+public class PolicyRestController {}

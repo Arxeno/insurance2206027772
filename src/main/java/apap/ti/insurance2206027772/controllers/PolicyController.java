@@ -2,6 +2,7 @@ package apap.ti.insurance2206027772.controllers;
 
 import apap.ti.insurance2206027772.dtos.request.AddPolicyAndPatientRequestDTO;
 import apap.ti.insurance2206027772.dtos.request.AddPolicyRequestDTO;
+import apap.ti.insurance2206027772.dtos.request.UpdatePolicyRequestDTO;
 import apap.ti.insurance2206027772.enums.PolicyStatus;
 import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
@@ -256,13 +257,37 @@ public class PolicyController {
   }
 
   @GetMapping("/{id}/update")
-  public String getUpdatePolicyForm(@PathVariable("id") String id) {
+  public String getUpdatePolicyForm(@PathVariable("id") String id, Model model)
+    throws NotFound {
+    Policy policy = policyService.getPolicyById(id);
+
+    if (policy == null) {
+      throw new NotFound("Tidak dapat menemukan policy dengan ID " + id);
+    }
+
+    UpdatePolicyRequestDTO dto = new UpdatePolicyRequestDTO();
+    dto.setId(policy.getId());
+    dto.setIdPatient(policy.getPatient().getId());
+    dto.setIdCompany(policy.getCompany().getId());
+    dto.setExpiryDate(policy.getExpiryDate());
+
+    model.addAttribute("dto", dto);
+    model.addAttribute("policy", policy);
+
     return "update-policy-form";
   }
 
   @PostMapping("/update")
-  public String postUpdatePolicy() {
-    //TODO: process POST request
+  public String postUpdatePolicy(
+    @ModelAttribute UpdatePolicyRequestDTO dto,
+    Model model
+  ) throws NotFound {
+    policyService.updatePolicy(dto);
+
+    model.addAttribute(
+      "message",
+      "Berhasil update policy dengan ID " + dto.getId()
+    );
 
     return "response";
   }

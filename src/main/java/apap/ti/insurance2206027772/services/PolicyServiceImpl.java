@@ -2,6 +2,7 @@ package apap.ti.insurance2206027772.services;
 
 import apap.ti.insurance2206027772.dtos.request.AddPolicyAndPatientRequestDTO;
 import apap.ti.insurance2206027772.dtos.request.AddPolicyRequestDTO;
+import apap.ti.insurance2206027772.dtos.request.UpdatePolicyRequestDTO;
 import apap.ti.insurance2206027772.enums.PolicyStatus;
 import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
@@ -186,6 +187,19 @@ public class PolicyServiceImpl implements PolicyService {
     newPolicy = createPolicy(newPolicy);
 
     return newPolicy;
+  }
+
+  @Override
+  public Policy updatePolicy(UpdatePolicyRequestDTO dto) throws NotFound {
+    Policy policy = getPolicyById(dto.getId());
+
+    if (policy == null) {
+      throw new NotFound("Policy dengan id " + dto.getId());
+    }
+
+    policy.setExpiryDate(dto.getExpiryDate());
+
+    return createPolicy(policy);
   }
 
   private String generatePolicyId(Policy policy) {

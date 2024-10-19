@@ -2,6 +2,7 @@ package apap.ti.insurance2206027772.services.interfaces;
 
 import apap.ti.insurance2206027772.dtos.request.AddPolicyAndPatientRequestDTO;
 import apap.ti.insurance2206027772.dtos.request.AddPolicyRequestDTO;
+import apap.ti.insurance2206027772.dtos.request.UpdatePolicyRequestDTO;
 import apap.ti.insurance2206027772.enums.PolicyStatus;
 import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Policy;
@@ -23,4 +24,5 @@ public interface PolicyService {
   Policy createPolicy(AddPolicyAndPatientRequestDTO dto)
     throws NotFound, BadRequestException;
   void deletePolicyById(String id) throws NotFound;
+  Policy updatePolicy(UpdatePolicyRequestDTO dto) throws NotFound;
 }
