@@ -45,6 +45,10 @@ public class Company extends BaseDeletedAt {
   public Long getTotalCoverage() {
     Long totalCoverage = 0L;
 
+    if (listCoverage == null) {
+      return totalCoverage;
+    }
+
     for (Coverage coverage : listCoverage) {
       totalCoverage += coverage.getCoverageAmount();
     }
