@@ -9,7 +9,7 @@ import apap.ti.insurance2206027772.models.Company;
 import apap.ti.insurance2206027772.models.Patient;
 import apap.ti.insurance2206027772.models.Policy;
 import apap.ti.insurance2206027772.repositories.PolicyDb;
-import apap.ti.insurance2206027772.services.interfaces.PolicyService;
+import apap.ti.insurance2206027772.services.PolicyServiceImpl;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,7 +23,7 @@ class Insurance2206027772ApplicationTests {
   private PolicyDb policyDb;
 
   @InjectMocks
-  private PolicyService policyService;
+  private PolicyServiceImpl policyService;
 
   public Insurance2206027772ApplicationTests() {
     openMocks(this);
