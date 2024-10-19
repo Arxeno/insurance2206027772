@@ -1,6 +1,7 @@
 package apap.ti.insurance2206027772.controllers;
 
 import apap.ti.insurance2206027772.exceptions.NotFound;
+import org.apache.coyote.BadRequestException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,16 @@ public class GlobalExceptionController {
     model.addAttribute("err", ex.getMessage());
 
     return "error/404";
+  }
+
+  @ExceptionHandler(BadRequestException.class)
+  public String handleBadRequestException(
+    final BadRequestException ex,
+    Model model
+  ) {
+    model.addAttribute("err", ex.getMessage());
+
+    return "error/400";
   }
 
   @ExceptionHandler(BadRequest.class)

@@ -1,11 +1,17 @@
 package apap.ti.insurance2206027772.services;
 
+import apap.ti.insurance2206027772.dtos.request.AddPolicyRequestDTO;
 import apap.ti.insurance2206027772.enums.PolicyStatus;
 import apap.ti.insurance2206027772.exceptions.NotFound;
+import apap.ti.insurance2206027772.models.Company;
+import apap.ti.insurance2206027772.models.Patient;
 import apap.ti.insurance2206027772.models.Policy;
 import apap.ti.insurance2206027772.repositories.PolicyDb;
+import apap.ti.insurance2206027772.services.interfaces.CompanyService;
+import apap.ti.insurance2206027772.services.interfaces.PatientService;
 import apap.ti.insurance2206027772.services.interfaces.PolicyService;
 import java.util.List;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +20,12 @@ public class PolicyServiceImpl implements PolicyService {
 
   @Autowired
   private PolicyDb policyDb;
+
+  @Autowired
+  private CompanyService companyService;
+
+  @Autowired
+  private PatientService patientService;
 
   public long getTotalPoliciesCount() {
     return policyDb.count();
@@ -90,6 +102,38 @@ public class PolicyServiceImpl implements PolicyService {
     policy.setStatus(PolicyStatus.CANCELLED);
 
     policyDb.save(policy);
+  }
+
+  @Override
+  public Policy createPolicy(AddPolicyRequestDTO dto)
+    throws NotFound, BadRequestException {
+    Policy newPolicy = new Policy();
+
+    Company company = companyService.getCompanyById(dto.getIdCompany());
+    if (company == null) {
+      throw new NotFound("Cannot find company.");
+    }
+    newPolicy.setCompany(company);
+
+    Patient patient = patientService.getPatientById(dto.getIdPatient());
+    if (patient == null) {
+      throw new NotFound("Cannot find patient.");
+    }
+    newPolicy.setPatient(patient);
+
+    if (patient.getAvailableLimit() < company.getTotalCoverage()) {
+      throw new BadRequestException(
+        "Total coverage company melebihi available limit."
+      );
+    }
+
+    newPolicy.setStatus(PolicyStatus.CREATED);
+    newPolicy.setExpiryDate(dto.getExpiryDate());
+    newPolicy.setTotalCoverage(company.getTotalCoverage());
+
+    newPolicy = createPolicy(newPolicy);
+
+    return newPolicy;
   }
 
   private String generatePolicyId(Policy policy) {

@@ -3,6 +3,7 @@ package apap.ti.insurance2206027772.services;
 import apap.ti.insurance2206027772.models.Patient;
 import apap.ti.insurance2206027772.repositories.PatientDb;
 import apap.ti.insurance2206027772.services.interfaces.PatientService;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,11 @@ public class PatientServiceImpl implements PatientService {
   @Override
   public long getTotalPatientsCount() {
     return patientDb.count();
+  }
+
+  @Override
+  public Patient getPatientById(UUID id) {
+    return patientDb.findById(id).orElse(null);
   }
 
   @Override

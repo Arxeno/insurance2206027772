@@ -46,7 +46,7 @@ public class Policy extends BaseCreatedUpdated {
   private Long totalCoverage;
 
   @NotNull
-  private Long totalCovered;
+  private Long totalCovered = 0L;
 
   public String getTotalCoverageString() {
     String formatted = String.format("%,d", totalCoverage);

@@ -26,6 +26,7 @@ import lombok.Setter;
 public class Patient extends Base {
 
   @Column(unique = true)
+  @NotNull
   private String nik;
 
   @NotNull
@@ -60,12 +61,28 @@ public class Patient extends Base {
     return age;
   }
 
-  public Integer getInsuranceLimit() {
+  public Long getInsuranceLimit() {
     return PClass.getClassLimit(pClass);
   }
 
   public String getInsuranceLimitString() {
     String formatted = String.format("%,d", getInsuranceLimit());
+
+    return String.format("IDR %s.00", formatted);
+  }
+
+  public Long getAvailableLimit() {
+    Long availableLimit = getInsuranceLimit();
+
+    for (Policy policy : listPolicy) {
+      availableLimit -= policy.getTotalCoverage();
+    }
+
+    return availableLimit;
+  }
+
+  public String getAvailableLimitString() {
+    String formatted = String.format("%,d", getAvailableLimit());
 
     return String.format("IDR %s.00", formatted);
   }

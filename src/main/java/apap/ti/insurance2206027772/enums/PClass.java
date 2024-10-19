@@ -11,14 +11,14 @@ public enum PClass {
     this.value = value;
   }
 
-  public static Integer getClassLimit(PClass pClass) {
+  public static Long getClassLimit(PClass pClass) {
     switch (pClass) {
       case LEVEL_1:
-        return 100000000;
+        return 100000000L;
       case LEVEL_2:
-        return 50000000;
+        return 50000000L;
       default:
-        return 25000000;
+        return 25000000L;
     }
   }
 }
