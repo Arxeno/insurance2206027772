@@ -59,7 +59,6 @@ public class PatientController {
     // BindingResult bindingResult,
     Model model
   ) {
-    //TODO: process POST request
     Patient patient = patientService.upgradeClassPatient(dto);
 
     model.addAttribute(

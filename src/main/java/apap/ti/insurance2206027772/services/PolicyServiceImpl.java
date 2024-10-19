@@ -119,7 +119,6 @@ public class PolicyServiceImpl implements PolicyService {
       );
     }
 
-    // TODO: calculate available limit etc. see docs for details
     policy.setStatus(PolicyStatus.CANCELLED);
 
     policyDb.save(policy);
