@@ -11,7 +11,7 @@ public enum PClass {
     this.value = value;
   }
 
-  public Integer getClassLimit(PClass pClass) {
+  public static Integer getClassLimit(PClass pClass) {
     switch (pClass) {
       case LEVEL_1:
         return 100000000;

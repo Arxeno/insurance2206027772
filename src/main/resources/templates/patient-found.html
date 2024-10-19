@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Patient Found | ApapMedika</title>
+
+	<object th:replace="~{fragments/common :: css}"></object>
+	<object th:replace="~{fragments/common :: js}"></object>
+</head>
+
+<body>
+	<object th:replace="~{fragments/navbar :: navbar}"></object>
+
+	<div class="container my-5">
+		<div class="card text-center">
+			<div class="card-body">
+				<h3 class="card-title">Patient Found</h3>
+				<div class="text-left my-4">
+					<p><strong>NIK:</strong> <span th:text="${patient.nik}"></span></p>
+					<p><strong>Name:</strong> <span th:text="${patient.name}"></span></p>
+					<p><strong>Gender:</strong> <span th:text="${patient.gender}"></span></p>
+					<p><strong>Date of Birth:</strong>
+						<span th:text="${#dates.format(patient.birthDate, 'MMMM dd, yyyy')}"></span>
+						(<span th:text="${patient.age.getYears()}"></span> years old)
+					</p>
+					<p><strong>Class:</strong> <span th:text="${patient.pClass}"></span></p>
+					<p><strong>Insurance Limit:</strong>
+						<span th:text="${patient.insuranceLimitString}"></span>
+					</p>
+				</div>
+
+				<div class="d-flex justify-content-center gap-3">
+					<a href="javascript:history.back()" class="btn btn-danger">Back</a>
+					<a th:href="@{/policy/create(nik=${patient.nik})}" class="btn btn-primary">Continue</a>
+					<a th:href="@{/patient/upgrade-class(nik=${patient.nik})}" class="btn btn-warning"
+						th:disabled="${patient.pClass == T(apap.ti.insurance2206027772.enums.PClass).LEVEL_1}">Upgrade
+						Class</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

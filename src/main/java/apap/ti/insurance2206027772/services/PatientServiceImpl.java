@@ -1,5 +1,6 @@
 package apap.ti.insurance2206027772.services;
 
+import apap.ti.insurance2206027772.models.Patient;
 import apap.ti.insurance2206027772.repositories.PatientDb;
 import apap.ti.insurance2206027772.services.interfaces.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,5 +15,10 @@ public class PatientServiceImpl implements PatientService {
   @Override
   public long getTotalPatientsCount() {
     return patientDb.count();
+  }
+
+  @Override
+  public Patient getPatientByNik(String nik) {
+    return patientDb.findByNik(nik);
   }
 }

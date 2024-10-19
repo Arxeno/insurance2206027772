@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Patient Not Found | ApapMedika</title>
+
+	<object th:replace="~{fragments/common :: css}"></object>
+	<object th:replace="~{fragments/common :: js}"></object>
+</head>
+
+<body>
+	<object th:replace="~{fragments/navbar :: navbar}"></object>
+
+	<div class="container my-5">
+		<div class="card text-center">
+			<div class="card-body">
+				<h3 class="card-title">Patient Not Found</h3>
+				<p class="card-text">
+					Patient with NIK <strong th:text="${nik}"></strong> not found. <br>
+					Please enter patient data as well to create a policy.
+				</p>
+
+				<div class="d-flex justify-content-center gap-3 mt-4">
+					<a href="javascript:history.back()" class="btn btn-back">Back</a>
+					<a th:href="@{/create/add-patient(nik=${nik})}" class="btn btn-continue">Continue</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

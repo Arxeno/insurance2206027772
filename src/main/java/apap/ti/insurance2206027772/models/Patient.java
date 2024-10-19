@@ -8,6 +8,9 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -38,8 +41,32 @@ public class Patient extends Base {
   @NotNull
   private String email;
 
+  @NotNull
+  @Enumerated(EnumType.ORDINAL)
   private PClass pClass;
 
   @OneToMany(mappedBy = "patient")
   private List<Policy> listPolicy;
+
+  public Period getAge() {
+    LocalDate birthDateLocal = birthDate
+      .toInstant()
+      .atZone(ZoneId.systemDefault())
+      .toLocalDate();
+    LocalDate currenDate = LocalDate.now();
+
+    Period age = Period.between(birthDateLocal, currenDate);
+
+    return age;
+  }
+
+  public Integer getInsuranceLimit() {
+    return PClass.getClassLimit(pClass);
+  }
+
+  public String getInsuranceLimitString() {
+    String formatted = String.format("%,d", getInsuranceLimit());
+
+    return String.format("IDR %s.00", formatted);
+  }
 }

@@ -2,7 +2,9 @@ package apap.ti.insurance2206027772.controllers;
 
 import apap.ti.insurance2206027772.enums.PolicyStatus;
 import apap.ti.insurance2206027772.exceptions.NotFound;
+import apap.ti.insurance2206027772.models.Patient;
 import apap.ti.insurance2206027772.models.Policy;
+import apap.ti.insurance2206027772.services.interfaces.PatientService;
 import apap.ti.insurance2206027772.services.interfaces.PolicyService;
 import java.util.List;
 import java.util.UUID;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +25,9 @@ public class PolicyController {
 
   @Autowired
   private PolicyService policyService;
+
+  @Autowired
+  private PatientService patientService;
 
   @GetMapping("/all")
   public String getListPoliciesPage(
@@ -62,16 +68,24 @@ public class PolicyController {
 
   @GetMapping("/create/search-patient")
   public String getSearchPatientForm() {
-    // TODO
-
     return "search-patient";
   }
 
   @PostMapping("/create/search-patient")
-  public String postSearchPatient() {
-    //TODO: process POST request
+  public String postSearchPatient(
+    @ModelAttribute(name = "nik") String nik,
+    Model model
+  ) {
+    Patient patient = patientService.getPatientByNik(nik);
 
-    return ""; // TODO
+    if (patient == null) {
+      model.addAttribute("nik", nik);
+      return "patient-not-found";
+    }
+
+    model.addAttribute("patient", patient);
+
+    return "patient-found";
   }
 
   @GetMapping("/create-with-patient")
