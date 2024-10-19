@@ -37,7 +37,7 @@ public class Policy extends BaseCreatedUpdated {
 
   @NotNull
   @Enumerated(EnumType.ORDINAL)
-  private PolicyStatus status;
+  private PolicyStatus status = PolicyStatus.CREATED;
 
   @NotNull
   private Date expiryDate;
@@ -58,5 +58,36 @@ public class Policy extends BaseCreatedUpdated {
     String formatted = String.format("%,d", totalCovered);
 
     return String.format("IDR %s.00", formatted);
+  }
+
+  public void setTotalCovered(Long totalCovered) {
+    if (status != PolicyStatus.CANCELLED || status != PolicyStatus.EXPIRED) {
+      this.totalCovered = totalCovered;
+
+      if (this.totalCovered >= totalCoverage) {
+        setStatus(PolicyStatus.FULLY_CLAIMED);
+      } else {
+        setStatus(PolicyStatus.PARTIALLY_CLAIMED);
+      }
+    }
+  }
+
+  public void refreshStatus() {
+    if (status != PolicyStatus.CANCELLED) {
+      if (totalCovered == totalCoverage) {
+        setStatus(PolicyStatus.FULLY_CLAIMED);
+      }
+
+      Date today = new Date();
+      if (today.getTime() >= expiryDate.getTime()) {
+        setStatus(PolicyStatus.CANCELLED);
+      }
+
+      if (totalCovered > 0 && totalCovered < totalCoverage) {
+        setStatus(PolicyStatus.PARTIALLY_CLAIMED);
+      }
+
+      setStatus(PolicyStatus.CREATED);
+    }
   }
 }

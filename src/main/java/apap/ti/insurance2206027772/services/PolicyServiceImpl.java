@@ -34,7 +34,13 @@ public class PolicyServiceImpl implements PolicyService {
 
   @Override
   public List<Policy> getAllPolicies() {
-    return policyDb.findAll();
+    List<Policy> policies = policyDb.findAll();
+    policies.forEach(policy -> {
+      policy.refreshStatus();
+      policyDb.save(policy);
+    });
+
+    return policies;
   }
 
   @Override
@@ -74,7 +80,14 @@ public class PolicyServiceImpl implements PolicyService {
 
   @Override
   public Policy getPolicyById(String id) {
-    return policyDb.findById(id).orElse(null);
+    var policy = policyDb.findById(id).orElse(null);
+
+    if (policy != null) {
+      policy.refreshStatus();
+      policyDb.save(policy);
+    }
+
+    return policy;
   }
 
   @Override
