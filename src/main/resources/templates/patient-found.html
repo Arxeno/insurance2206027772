@@ -35,7 +35,7 @@
 					<a href="javascript:history.back()" class="btn btn-danger">Back</a>
 					<a th:href="@{/policy/{nik}/create(nik=${patient.nik})}" class="btn btn-primary">Continue</a>
 
-					<form th:action="@{/patient/upgrade-class(nik=${patient.nik})}" method="get">
+					<form th:action="@{/patient/{id}/upgrade-class(id=${patient.id})}" method="get">
 						<button type="submit" class="btn btn-warning"
 							th:disabled="${patient.pClass.name() == T(apap.ti.insurance2206027772.enums.PClass).LEVEL_1.name()}">
 							Upgrade Class

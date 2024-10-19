@@ -33,6 +33,10 @@ public enum PClass {
     }
   }
 
+  public int getValue() {
+    return this.value;
+  }
+
   public String toString() {
     String formatted = String.format("%,d", getClassLimit(value));
 

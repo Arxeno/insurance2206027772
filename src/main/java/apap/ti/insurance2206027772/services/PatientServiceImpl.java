@@ -1,6 +1,7 @@
 package apap.ti.insurance2206027772.services;
 
 import apap.ti.insurance2206027772.dtos.request.AddPolicyAndPatientRequestDTO;
+import apap.ti.insurance2206027772.dtos.request.UpdatePatientRequestDTO;
 import apap.ti.insurance2206027772.models.Patient;
 import apap.ti.insurance2206027772.repositories.PatientDb;
 import apap.ti.insurance2206027772.services.interfaces.PatientService;
@@ -42,6 +43,14 @@ public class PatientServiceImpl implements PatientService {
     patient.setGender(dto.getGender());
     patient.setBirthDate(dto.getBirthDate());
     patient.setEmail(dto.getEmail());
+    patient.setPClass(dto.getPClass());
+
+    return createPatient(patient);
+  }
+
+  @Override
+  public Patient upgradeClassPatient(UpdatePatientRequestDTO dto) {
+    Patient patient = getPatientById(dto.getId());
     patient.setPClass(dto.getPClass());
 
     return createPatient(patient);

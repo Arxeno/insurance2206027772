@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Upgrade Class Patient | ApapMedika</title>
+
+	<object th:replace="~{fragments/common :: css}"></object>
+	<object th:replace="~{fragments/common :: js}"></object>
+</head>
+
+<body>
+	<object th:replace="~{fragments/navbar :: navbar}"></object>
+
+	<div class="container my-5">
+		<div class="card mx-auto" style="max-width: 600px;">
+			<div class="card-header text-center">
+				<h3>Upgrade Class</h3>
+			</div>
+			<div class="card-body">
+				<form th:action="@{/patient/upgrade-class}" th:object="${dto}" method="post">
+					<input type="text" th:field="*{id}" hidden>
+					<input type="text" th:field="*{nik}" hidden>
+					<input type="text" th:field="*{name}" hidden>
+					<input type="text" th:field="*{gender}" hidden>
+					<input type="date" th:field="*{birthDate}" hidden>
+					<input type="text" th:field="*{email}" hidden>
+
+
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label">NIK</label>
+						<div class="col-sm-8">
+							<p class="form-control-plaintext detail-value" th:text="${dto.nik}"></p>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label">Name</label>
+						<div class="col-sm-8">
+							<p class="form-control-plaintext detail-value" th:text="${dto.name}"></p>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label">Gender</label>
+						<div class="col-sm-8">
+							<p class="form-control-plaintext detail-value" th:text="${dto.gender}"></p>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label">Date of Birth</label>
+						<div class="col-sm-8">
+							<p class="form-control-plaintext detail-value">
+								<span th:text="${#dates.format(dto.birthDate, 'MMMM dd, yyyy')}"></span>
+							</p>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label">Class</label>
+						<div class="col-sm-8">
+							<select class="form-control" th:field="*{pClass}">
+								<option th:each="pClassOption : ${T(apap.ti.insurance2206027772.enums.PClass).values()}"
+									th:value="${pClassOption.name()}" th:text="${pClassOption.toString()}">
+								</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="d-flex justify-content-center gap-3 mt-4">
+						<a href="javascript:history.back()" class="btn btn-danger">Cancel</a>
+						<button type="submit" class="btn btn-success">Upgrade</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
