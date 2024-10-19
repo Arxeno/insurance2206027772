@@ -21,4 +21,21 @@ public enum PClass {
         return 25000000L;
     }
   }
+
+  private Long getClassLimit(int value) {
+    switch (value) {
+      case 1:
+        return 100000000L;
+      case 2:
+        return 50000000L;
+      default:
+        return 25000000L;
+    }
+  }
+
+  public String toString() {
+    String formatted = String.format("%,d", getClassLimit(value));
+
+    return String.format("Class %d - Limit: IDR %s.00", value, formatted);
+  }
 }

@@ -1,5 +1,6 @@
 package apap.ti.insurance2206027772.services;
 
+import apap.ti.insurance2206027772.dtos.request.AddPolicyAndPatientRequestDTO;
 import apap.ti.insurance2206027772.dtos.request.AddPolicyRequestDTO;
 import apap.ti.insurance2206027772.enums.PolicyStatus;
 import apap.ti.insurance2206027772.exceptions.NotFound;
@@ -106,6 +107,38 @@ public class PolicyServiceImpl implements PolicyService {
 
   @Override
   public Policy createPolicy(AddPolicyRequestDTO dto)
+    throws NotFound, BadRequestException {
+    Policy newPolicy = new Policy();
+
+    Company company = companyService.getCompanyById(dto.getIdCompany());
+    if (company == null) {
+      throw new NotFound("Cannot find company.");
+    }
+    newPolicy.setCompany(company);
+
+    Patient patient = patientService.getPatientById(dto.getIdPatient());
+    if (patient == null) {
+      throw new NotFound("Cannot find patient.");
+    }
+    newPolicy.setPatient(patient);
+
+    if (patient.getAvailableLimit() < company.getTotalCoverage()) {
+      throw new BadRequestException(
+        "Total coverage company melebihi available limit."
+      );
+    }
+
+    newPolicy.setStatus(PolicyStatus.CREATED);
+    newPolicy.setExpiryDate(dto.getExpiryDate());
+    newPolicy.setTotalCoverage(company.getTotalCoverage());
+
+    newPolicy = createPolicy(newPolicy);
+
+    return newPolicy;
+  }
+
+  @Override
+  public Policy createPolicy(AddPolicyAndPatientRequestDTO dto)
     throws NotFound, BadRequestException {
     Policy newPolicy = new Policy();
 

@@ -1,5 +1,6 @@
 package apap.ti.insurance2206027772.controllers;
 
+import apap.ti.insurance2206027772.dtos.request.AddPolicyAndPatientRequestDTO;
 import apap.ti.insurance2206027772.dtos.request.AddPolicyRequestDTO;
 import apap.ti.insurance2206027772.enums.PolicyStatus;
 import apap.ti.insurance2206027772.exceptions.NotFound;
@@ -103,15 +104,63 @@ public class PolicyController {
   }
 
   @GetMapping("/create-with-patient")
-  public String getCreatePolicyWithPatientForm() {
+  public String getCreatePolicyWithPatientForm(Model model) {
+    AddPolicyAndPatientRequestDTO dto = new AddPolicyAndPatientRequestDTO();
+
+    List<Company> companies = companyService.getAllCompanies();
+
+    model.addAttribute("dto", dto);
+    model.addAttribute("companies", companies);
+
+    return "create-policy-and-patient-form";
+  }
+
+  @PostMapping(value = "/create-with-patient", params = { "loadCoverage" })
+  public String loadCoverage(
+    @ModelAttribute AddPolicyAndPatientRequestDTO dto,
+    Model model
+  ) {
+    List<Company> companies = companyService.getAllCompanies();
+    Company company = companyService.getCompanyById(dto.getIdCompany());
+
+    model.addAttribute("dto", dto);
+    model.addAttribute("companies", companies);
+    model.addAttribute("company", company);
+
     return "create-policy-and-patient-form";
   }
 
   @PostMapping("/create-with-patient")
-  public String postCreatePolicyWithPatient() {
-    //TODO: process POST request
+  public String postCreatePolicyWithPatient(
+    @Valid @ModelAttribute AddPolicyAndPatientRequestDTO dto,
+    BindingResult bindingResult,
+    Model model
+  ) throws BadRequestException, NotFound {
+    if (bindingResult.hasErrors()) {
+      List<String> errors = bindingResult
+        .getFieldErrors()
+        .stream()
+        .map(error -> error.getField() + " " + error.getDefaultMessage())
+        .toList();
 
-    return ""; // TODO
+      List<Company> companies = companyService.getAllCompanies();
+      Company company = companyService.getCompanyById(dto.getIdCompany());
+
+      model.addAttribute("errors", errors);
+      model.addAttribute("dto", dto);
+      model.addAttribute("companies", companies);
+      model.addAttribute("company", company);
+
+      return "create-policy-and-patient-form";
+    }
+
+    Patient patient = patientService.createPatient(dto);
+    dto.setIdPatient(patient.getId());
+    policyService.createPolicy(dto);
+
+    model.addAttribute("message", "Berhasil membuat policy dan patient!");
+
+    return "response";
   }
 
   @GetMapping("/{nik}/create")

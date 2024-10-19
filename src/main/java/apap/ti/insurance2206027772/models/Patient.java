@@ -74,6 +74,10 @@ public class Patient extends Base {
   public Long getAvailableLimit() {
     Long availableLimit = getInsuranceLimit();
 
+    if (listPolicy == null) {
+      return availableLimit;
+    }
+
     for (Policy policy : listPolicy) {
       availableLimit -= policy.getTotalCoverage();
     }
