@@ -10,19 +10,20 @@ import apap.ti.insurance2206027772.models.Patient;
 import apap.ti.insurance2206027772.models.Policy;
 import apap.ti.insurance2206027772.repositories.PolicyDb;
 import apap.ti.insurance2206027772.services.PolicyServiceImpl;
+import com.github.javafaker.Faker;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class Insurance2206027772ApplicationTests {
 
-  @Mock
+  @MockBean
   private PolicyDb policyDb;
 
-  @InjectMocks
+  @Autowired
   private PolicyServiceImpl policyService;
 
   public Insurance2206027772ApplicationTests() {
@@ -31,6 +32,8 @@ class Insurance2206027772ApplicationTests {
 
   @Test
   public void testGetAllPolicies() {
+    Faker faker = new Faker();
+
     Company mockCompany = new Company();
     String companyName = "Starlink";
     mockCompany.setName(companyName);
@@ -45,11 +48,20 @@ class Insurance2206027772ApplicationTests {
     mockPolicy.setPatient(mockPatient);
     mockPolicy.setCompany(mockCompany);
     mockPolicy.setTotalCoverage(mockCompany.getTotalCoverage());
+    mockPolicy.setExpiryDate(
+      faker.date().future(365, java.util.concurrent.TimeUnit.DAYS)
+    );
     mockPolicy.setStatus(PolicyStatus.CREATED);
 
     when(policyDb.findAll()).thenReturn(List.of(mockPolicy));
 
+    when(policyDb.save(mockPolicy)).thenReturn(mockPolicy);
+
+    System.out.println(policyDb.findAll());
+
     List<Policy> policies = policyService.getAllPolicies();
+
+    System.out.println(policies);
 
     assertEquals(1, policies.size());
     assertEquals(patientName, policies.get(0).getPatient().getName());
