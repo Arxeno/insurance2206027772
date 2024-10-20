@@ -5,6 +5,7 @@ import apap.ti.insurance2206027772.api.dtos.response.PatientResponseDTO;
 import apap.ti.insurance2206027772.api.dtos.response.PolicyResponseDTO;
 import apap.ti.insurance2206027772.api.services.interfaces.PolicyRestService;
 import apap.ti.insurance2206027772.enums.PolicyStatus;
+import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
 import apap.ti.insurance2206027772.models.Coverage;
 import apap.ti.insurance2206027772.models.Patient;
@@ -21,8 +22,14 @@ public class PolicyRestServiceImpl implements PolicyRestService {
   private PolicyDb policyDb;
 
   @Override
-  public PolicyResponseDTO getPolicyById(String id) {
+  public PolicyResponseDTO getPolicyById(String id) throws NotFound {
     Policy policy = policyDb.findById(id).orElse(null);
+
+    if (policy == null) {
+      throw new NotFound(
+        String.format("Policy dengan ID %s tidak dapat ditemukan.", id)
+      );
+    }
 
     if (policy != null) {
       policy.refreshStatus();

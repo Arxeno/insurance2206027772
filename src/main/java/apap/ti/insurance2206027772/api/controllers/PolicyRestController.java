@@ -4,6 +4,7 @@ import apap.ti.insurance2206027772.api.dtos.request.AddPolicyRequestRestDTO;
 import apap.ti.insurance2206027772.api.dtos.response.BaseResponseDTO;
 import apap.ti.insurance2206027772.api.dtos.response.PolicyResponseDTO;
 import apap.ti.insurance2206027772.api.services.interfaces.PolicyRestService;
+import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
 import apap.ti.insurance2206027772.models.Patient;
 import apap.ti.insurance2206027772.services.interfaces.CompanyService;
@@ -36,7 +37,7 @@ public class PolicyRestController {
   @GetMapping("/detail")
   public ResponseEntity<BaseResponseDTO<PolicyResponseDTO>> detailPolicy(
     @RequestParam("id") String id
-  ) {
+  ) throws NotFound {
     var baseResponseDTO = new BaseResponseDTO<PolicyResponseDTO>();
 
     PolicyResponseDTO detailPolicy = policyRestService.getPolicyById(id);
