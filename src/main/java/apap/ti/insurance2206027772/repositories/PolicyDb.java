@@ -1,7 +1,6 @@
 package apap.ti.insurance2206027772.repositories;
 
 import apap.ti.insurance2206027772.models.Policy;
-import java.time.Month;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

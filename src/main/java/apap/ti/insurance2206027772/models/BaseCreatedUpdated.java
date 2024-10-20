@@ -2,7 +2,6 @@ package apap.ti.insurance2206027772.models;
 
 import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDate;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;

@@ -10,7 +10,6 @@ import apap.ti.insurance2206027772.enums.PolicyStatus;
 import apap.ti.insurance2206027772.enums.Quarter;
 import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
-import apap.ti.insurance2206027772.models.Coverage;
 import apap.ti.insurance2206027772.models.Patient;
 import apap.ti.insurance2206027772.models.Policy;
 import apap.ti.insurance2206027772.repositories.PolicyDb;

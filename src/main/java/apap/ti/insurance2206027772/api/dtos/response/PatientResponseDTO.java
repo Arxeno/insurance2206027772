@@ -3,8 +3,6 @@ package apap.ti.insurance2206027772.api.dtos.response;
 import apap.ti.insurance2206027772.enums.Gender;
 import apap.ti.insurance2206027772.enums.PClass;
 import apap.ti.insurance2206027772.models.Policy;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;

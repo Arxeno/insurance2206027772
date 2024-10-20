@@ -14,7 +14,6 @@ import apap.ti.insurance2206027772.services.interfaces.PatientService;
 import apap.ti.insurance2206027772.services.interfaces.PolicyService;
 import java.util.List;
 import org.apache.coyote.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -113,10 +112,7 @@ public class PolicyServiceImpl implements PolicyService {
 
     if (policy == null) {
       throw new NotFound(
-        String.format(
-          "Policy dengan ID %s tidak dapat ditemukan.",
-          policy.getId()
-        )
+        String.format("Policy dengan ID %s tidak dapat ditemukan.", id)
       );
     }
 

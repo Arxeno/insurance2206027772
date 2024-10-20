@@ -3,7 +3,6 @@ package apap.ti.insurance2206027772.controllers;
 import apap.ti.insurance2206027772.exceptions.NotFound;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.coyote.BadRequestException;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

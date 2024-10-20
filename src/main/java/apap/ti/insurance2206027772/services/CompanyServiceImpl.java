@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
