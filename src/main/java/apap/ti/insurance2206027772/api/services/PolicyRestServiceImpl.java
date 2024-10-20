@@ -3,15 +3,21 @@ package apap.ti.insurance2206027772.api.services;
 import apap.ti.insurance2206027772.api.dtos.response.CompanyResponseDTO;
 import apap.ti.insurance2206027772.api.dtos.response.PatientResponseDTO;
 import apap.ti.insurance2206027772.api.dtos.response.PolicyResponseDTO;
+import apap.ti.insurance2206027772.api.dtos.response.PolicyStatisticResponseDTO;
 import apap.ti.insurance2206027772.api.services.interfaces.PolicyRestService;
+import apap.ti.insurance2206027772.enums.PolicyPeriod;
 import apap.ti.insurance2206027772.enums.PolicyStatus;
+import apap.ti.insurance2206027772.enums.Quarter;
 import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
 import apap.ti.insurance2206027772.models.Coverage;
 import apap.ti.insurance2206027772.models.Patient;
 import apap.ti.insurance2206027772.models.Policy;
 import apap.ti.insurance2206027772.repositories.PolicyDb;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +63,67 @@ public class PolicyRestServiceImpl implements PolicyRestService {
     policyDb.save(policy);
 
     return policyToPolicyResponseDTO(policy);
+  }
+
+  private String mapMonth(Month month) {
+    switch (month) {
+      case JANUARY:
+        return "Jan";
+      case FEBRUARY:
+        return "Feb";
+      case MARCH:
+        return "Mar";
+      case APRIL:
+        return "Apr";
+      case MAY:
+        return "May";
+      case JUNE:
+        return "Jun";
+      case JULY:
+        return "Jul";
+      case AUGUST:
+        return "Aug";
+      case SEPTEMBER:
+        return "Sep";
+      case OCTOBER:
+        return "Oct";
+      case NOVEMBER:
+        return "Nov";
+      default:
+        return "Des";
+    }
+  }
+
+  @Override
+  public List<PolicyStatisticResponseDTO> getPolicyStatistics(
+    PolicyPeriod period,
+    int year
+  ) {
+    List<PolicyStatisticResponseDTO> result = new ArrayList<>();
+
+    if (period == PolicyPeriod.MONTHLY) {
+      for (Month month : Month.values()) {
+        PolicyStatisticResponseDTO dto = new PolicyStatisticResponseDTO();
+        dto.setMonthOrQuartal(mapMonth(month));
+        dto.setQty(policyDb.countByCreatedMonthAndYear(month.getValue(), year));
+        result.add(dto);
+      }
+    } else {
+      for (Quarter quarter : Quarter.values()) {
+        PolicyStatisticResponseDTO dto = new PolicyStatisticResponseDTO();
+        dto.setMonthOrQuartal(quarter.getValue());
+
+        long totalQty = 0;
+        for (Month month : Quarter.getMonths(quarter)) {
+          totalQty +=
+            policyDb.countByCreatedMonthAndYear(month.getValue(), year);
+        }
+        dto.setQty(totalQty);
+        result.add(dto);
+      }
+    }
+
+    return result;
   }
 
   private long getTotalPoliciesCount() {

@@ -3,6 +3,7 @@ package apap.ti.insurance2206027772.controllers;
 import apap.ti.insurance2206027772.dtos.request.AddPolicyAndPatientRequestDTO;
 import apap.ti.insurance2206027772.dtos.request.AddPolicyRequestDTO;
 import apap.ti.insurance2206027772.dtos.request.UpdatePolicyRequestDTO;
+import apap.ti.insurance2206027772.enums.PolicyPeriod;
 import apap.ti.insurance2206027772.enums.PolicyStatus;
 import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
@@ -302,5 +303,10 @@ public class PolicyController {
     model.addAttribute("policy", policy);
 
     return "policy-details";
+  }
+
+  @GetMapping("/stat")
+  public String getStatistics() {
+    return "policy-charts";
   }
 }

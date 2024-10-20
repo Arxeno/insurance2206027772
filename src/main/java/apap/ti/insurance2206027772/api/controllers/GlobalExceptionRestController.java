@@ -2,6 +2,7 @@ package apap.ti.insurance2206027772.api.controllers;
 
 import apap.ti.insurance2206027772.api.dtos.response.BaseResponseDTO;
 import apap.ti.insurance2206027772.exceptions.NotFound;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,15 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-@RestControllerAdvice
-@RequestMapping("/api")
+@RestControllerAdvice("apap.ti.insurance2206027772.api.controllers")
 public class GlobalExceptionRestController {
 
   @ExceptionHandler(NotFound.class)
   public ResponseEntity<BaseResponseDTO<?>> handleNotFound(
     final NotFound ex,
-    Model model
+    HttpServletRequest request
   ) {
+    String requestUri = request.getRequestURI();
+
+    if (!requestUri.startsWith("/api")) {
+      return null;
+    }
+
     var baseResponseDTO = new BaseResponseDTO<>();
     baseResponseDTO.setStatus(HttpStatus.NOT_FOUND.value());
     baseResponseDTO.setMessage(
@@ -38,8 +44,14 @@ public class GlobalExceptionRestController {
   @ExceptionHandler(NoResourceFoundException.class)
   public ResponseEntity<BaseResponseDTO<?>> handleNotFound(
     final NoResourceFoundException ex,
-    Model model
+    HttpServletRequest request
   ) {
+    String requestUri = request.getRequestURI();
+
+    if (!requestUri.startsWith("/api")) {
+      return null;
+    }
+
     var baseResponseDTO = new BaseResponseDTO<>();
     baseResponseDTO.setStatus(HttpStatus.NOT_FOUND.value());
     baseResponseDTO.setMessage(
@@ -58,8 +70,14 @@ public class GlobalExceptionRestController {
   @ExceptionHandler(Exception.class)
   public ResponseEntity<BaseResponseDTO<?>> handleNotFound(
     final Exception ex,
-    Model model
+    HttpServletRequest request
   ) {
+    String requestUri = request.getRequestURI();
+
+    if (!requestUri.startsWith("/api")) {
+      return null;
+    }
+
     var baseResponseDTO = new BaseResponseDTO<>();
     baseResponseDTO.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
     baseResponseDTO.setMessage("Internal Server Error.");

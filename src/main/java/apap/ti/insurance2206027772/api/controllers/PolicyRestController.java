@@ -3,7 +3,9 @@ package apap.ti.insurance2206027772.api.controllers;
 import apap.ti.insurance2206027772.api.dtos.request.AddPolicyRequestRestDTO;
 import apap.ti.insurance2206027772.api.dtos.response.BaseResponseDTO;
 import apap.ti.insurance2206027772.api.dtos.response.PolicyResponseDTO;
+import apap.ti.insurance2206027772.api.dtos.response.PolicyStatisticResponseDTO;
 import apap.ti.insurance2206027772.api.services.interfaces.PolicyRestService;
+import apap.ti.insurance2206027772.enums.PolicyPeriod;
 import apap.ti.insurance2206027772.exceptions.NotFound;
 import apap.ti.insurance2206027772.models.Company;
 import apap.ti.insurance2206027772.models.Patient;
@@ -11,6 +13,7 @@ import apap.ti.insurance2206027772.services.interfaces.CompanyService;
 import apap.ti.insurance2206027772.services.interfaces.PatientService;
 import jakarta.validation.Valid;
 import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,5 +89,25 @@ public class PolicyRestController {
     baseResponseDTO.setTimestamp(new Date());
 
     return new ResponseEntity<>(baseResponseDTO, HttpStatus.CREATED);
+  }
+
+  @PostMapping("/stat")
+  public ResponseEntity<BaseResponseDTO<List<PolicyStatisticResponseDTO>>> getPolicyStatistics(
+    @RequestParam("period") PolicyPeriod period,
+    @RequestParam("year") int year
+  ) {
+    BaseResponseDTO<List<PolicyStatisticResponseDTO>> baseResponseDTO = new BaseResponseDTO<>();
+
+    List<PolicyStatisticResponseDTO> policyStatistics = policyRestService.getPolicyStatistics(
+      period,
+      year
+    );
+
+    baseResponseDTO.setStatus(HttpStatus.CREATED.value());
+    baseResponseDTO.setData(policyStatistics);
+    baseResponseDTO.setMessage("Policy berhasil dibuat.");
+    baseResponseDTO.setTimestamp(new Date());
+
+    return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
   }
 }
